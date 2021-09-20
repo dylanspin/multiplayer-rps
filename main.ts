@@ -1,6 +1,7 @@
 function checkWin () {
+    winEnd = 1
     if (enemyNum == pressed) {
-        basic.showIcon(IconNames.Asleep)
+        winLos(2)
     } else if (enemyNum == 0) {
         if (pressed == 1) {
             winLos(0)
@@ -26,11 +27,13 @@ radio.onReceivedNumber(function (receivedNumber) {
         reset()
     } else {
         if (send == 1) {
+            recieved = 1
+            enemyNum = receivedNumber
             checkWin()
         } else {
             if (recieved == 0) {
-                enemyNum = receivedNumber
                 recieved = 1
+                enemyNum = receivedNumber
             }
         }
     }
@@ -39,17 +42,18 @@ input.onButtonPressed(Button.A, function () {
     send2(0)
 })
 input.onLogoEvent(TouchButtonEvent.Pressed, function () {
-    send2(2)
+    send2(1)
 })
 function winLos (num: number) {
     if (num == 0) {
         basic.showIcon(IconNames.Yes)
+    } else if (num == 2) {
+        basic.showIcon(IconNames.Asleep)
     } else {
         basic.showIcon(IconNames.No)
     }
     basic.pause(200)
     radio.sendNumber(20)
-    reset()
 }
 function send2 (num: number) {
     if (send == 0) {
@@ -82,27 +86,31 @@ function send2 (num: number) {
                 # # . . #
                 `)
         }
-    } else if (recieved == 1) {
-        checkWin()
+        basic.pause(100)
+        if (recieved == 1) {
+            checkWin()
+        }
     }
 }
 input.onButtonPressed(Button.B, function () {
-    send2(1)
+    send2(2)
 })
 function reset () {
     basic.clearScreen()
     send = 0
     recieved = 0
+    winEnd = 0
 }
 let recieved = 0
 let send = 0
 let pressed = 0
 let enemyNum = 0
+let winEnd = 0
 radio.setGroup(42)
 basic.forever(function () {
-    if (send == 1) {
-        basic.showString("...")
-    } else if (send == 0 || recieved == 1) {
-        basic.showString("pick")
+    if (winEnd != 1) {
+        if (send == 1) {
+            basic.showString("...")
+        }
     }
 })
