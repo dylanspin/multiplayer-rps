@@ -23,18 +23,14 @@ function checkWin () {
     }
 }
 radio.onReceivedNumber(function (receivedNumber) {
-    if (receivedNumber == 20) {
-        reset()
+    if (send == 1) {
+        recieved = 1
+        enemyNum = receivedNumber
+        checkWin()
     } else {
-        if (send == 1) {
+        if (recieved == 0) {
             recieved = 1
             enemyNum = receivedNumber
-            checkWin()
-        } else {
-            if (recieved == 0) {
-                recieved = 1
-                enemyNum = receivedNumber
-            }
         }
     }
 })
@@ -52,8 +48,8 @@ function winLos (num: number) {
     } else {
         basic.showIcon(IconNames.No)
     }
-    basic.pause(200)
-    radio.sendNumber(20)
+    basic.pause(2000)
+    reset()
 }
 function send2 (num: number) {
     if (send == 0) {
@@ -62,18 +58,18 @@ function send2 (num: number) {
         radio.sendNumber(num)
         if (num == 0) {
             basic.showLeds(`
-                # # # # #
-                # # # # #
-                # # # # #
-                # # # # #
-                # # # # #
+                . . . . .
+                . # # # .
+                . # # # .
+                . # # # .
+                . . . . .
                 `)
         } else if (num == 1) {
             basic.showLeds(`
                 # # # # #
-                # . . . #
-                # . . . #
-                # . . . #
+                # # # # #
+                # # # # #
+                # # # # #
                 # # # # #
                 `)
             basic.showString("P")
@@ -86,7 +82,6 @@ function send2 (num: number) {
                 # # . . #
                 `)
         }
-        basic.pause(100)
         if (recieved == 1) {
             checkWin()
         }
@@ -110,7 +105,9 @@ radio.setGroup(42)
 basic.forever(function () {
     if (winEnd != 1) {
         if (send == 1) {
-            basic.showString("...")
+            basic.showString("..")
+        } else {
+            basic.showString("?")
         }
     }
 })
