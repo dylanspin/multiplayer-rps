@@ -87,6 +87,9 @@ function send2 (num: number) {
         }
     }
 }
+radio.onReceivedString(function (receivedString) {
+    conectedTimer = 10
+})
 input.onButtonPressed(Button.B, function () {
     send2(2)
 })
@@ -96,6 +99,7 @@ function reset () {
     recieved = 0
     winEnd = 0
 }
+let conectedTimer = 0
 let recieved = 0
 let send = 0
 let pressed = 0
@@ -103,11 +107,17 @@ let enemyNum = 0
 let winEnd = 0
 radio.setGroup(42)
 basic.forever(function () {
-    if (winEnd != 1) {
-        if (send == 1) {
-            basic.showString("..")
-        } else {
-            basic.showString("?")
+    radio.sendString("conn")
+    if (conectedTimer > 0) {
+        conectedTimer = conectedTimer - 1
+        if (winEnd != 1) {
+            if (send == 1) {
+                basic.showString("..")
+            } else {
+                basic.showString("?")
+            }
         }
+    } else {
+        basic.showString("con")
     }
 })
